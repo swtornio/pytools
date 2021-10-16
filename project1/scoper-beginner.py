@@ -20,11 +20,16 @@
 # https://ipgeolocation.io/documentation/ip-geolocation-api.html
 
 import requests
+import configparser
 
 # store the API key in an external file and make sure to add the file
 # to .gitignore
-from config import IPGEO_KEY
+# from ipgeoconf import IPGEO_KEY
 
+cfg = configparser.ConfigParser()
+cfg.read('ipgeo.cfg')
+
+IPGEO_KEY = cfg.get('KEYS', 'api_key', raw='')
 IPGEO_URL = "https://api.ipgeolocation.io/ipgeo"
 
 def locate(ip):
