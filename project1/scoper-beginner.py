@@ -19,3 +19,22 @@
 
 # https://ipgeolocation.io/documentation/ip-geolocation-api.html
 
+import requests
+
+# store the API key in an external file and make sure to add the file
+# to .gitignore
+from config import IPGEO_KEY
+
+IPGEO_URL = "https://api.ipgeolocation.io/ipgeo"
+
+def locate(ip):
+    '''Query IP Geo database for given IP and print Owner'''
+    resp = requests.get(f'https://api.ipgeolocation.io/ipgeo?apiKey={IPGEO_KEY}&ip={ip}')
+    location_info = resp.json()
+    print(f'{ip} is owned by {location_info["isp"]}, located in '
+          f'{location_info["city"]}, {location_info["state_prov"]}.')
+
+
+if __name__ == '__main__':
+    target_ip = input("Enter an IP to look up: ")
+    locate(target_ip)
