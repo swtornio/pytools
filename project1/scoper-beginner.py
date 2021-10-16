@@ -24,7 +24,6 @@ import configparser
 
 # store the API key in an external file and make sure to add the file
 # to .gitignore
-# from ipgeoconf import IPGEO_KEY
 
 cfg = configparser.ConfigParser()
 cfg.read('ipgeo.cfg')
