@@ -1,13 +1,15 @@
 
 # Create a GitHub repo and clone it
 
-First, create a repository using the github web interface. If you pick a license, choose something open like MIT, Apache, BSD. If you pick GPL for a coding group where everyone is cribbing off each other, you're just introducing complications and infecting everyone's code with your choice.
+First, create a repository using the github web interface. If you pick a license, choose something open like MIT, Apache, BSD. If you pick GPL for a coding group where everyone is cribbing off each other, you're just introducing complications and infecting everyone's code with your choice. Choose a default .gitignore file for Python.
 
 If you haven't already done so, upload an SSH public key in Settings/SSH and GPG keys.
 
 Configure your github user information locally (this is from memory, I'll update if someone corrects me)
-`git config --global user.name "username"`
-`git config --global user.email "me@here.com"`
+```
+git config --global user.name "username"
+git config --global user.email "me@here.com"
+```
 
 
 ## Clone the repo
@@ -36,3 +38,27 @@ steve@Stephens-MacBook-Pro pytools % source env/bin/activate
 Python 3.8.2
 ```
 
+# Create files, commit, and push to github
+
+```
+(env) steve@Stephens-MacBook-Pro pytools % ls
+LICENSE		README.md	env		git_and_env.md
+
+(env) steve@Stephens-MacBook-Pro pytools % git add git_and_env.md
+(env) steve@Stephens-MacBook-Pro pytools % git commit -m "first commit of setup notes" git_and_env.md
+[main 4ba77a1] first commit of setup notes
+ 1 file changed, 38 insertions(+)
+ create mode 100644 git_and_env.md
+
+(env) steve@Stephens-MacBook-Pro pytools % git push
+Enter passphrase for key '/Users/steve/.ssh/id_rsa': 
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 1.02 KiB | 1.02 MiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To github.com:swtornio/pytools.git
+   875a419..4ba77a1  main -> main
+```
