@@ -17,3 +17,5 @@
 # Get geolocation for an IPv4 IP Address = 8.8.8.8
 # $ curl 'https://api.ipgeolocation.io/ipgeo?apiKey=API_KEY&ip=8.8.8.8'
 
+# https://ipgeolocation.io/documentation/ip-geolocation-api.html
+

@@ -8,3 +8,5 @@
 
 # Expert Task:Have the script read from a file containing both single
 # IP addresses and CIDR notation, having it process it both types.
+
+# https://ipgeolocation.io/documentation/ip-geolocation-api.html

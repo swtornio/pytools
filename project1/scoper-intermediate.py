@@ -12,3 +12,5 @@
 #  $  curl -X POST 'https://api.ipgeolocation.io/ipgeo-bulk?apiKey=API_KEY'
 #  -H 'Content-Type: application/json'
 #  -d '{ "ips": ["1.1.1.1", "1.2.3.4"] }'
+
+# https://ipgeolocation.io/documentation/ip-geolocation-api.html
