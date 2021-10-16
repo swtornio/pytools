@@ -29,7 +29,7 @@ IPGEO_URL = "https://api.ipgeolocation.io/ipgeo"
 
 def locate(ip):
     '''Query IP Geo database for given IP and print Owner'''
-    resp = requests.get(f'https://api.ipgeolocation.io/ipgeo?apiKey={IPGEO_KEY}&ip={ip}')
+    resp = requests.get(f'{IPGEO_URL}?apiKey={IPGEO_KEY}&ip={ip}')
     location_info = resp.json()
     print(f'{ip} is owned by {location_info["isp"]}, located in '
           f'{location_info["city"]}, {location_info["state_prov"]}.')
