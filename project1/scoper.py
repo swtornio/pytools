@@ -12,7 +12,6 @@
 # https://ipgeolocation.io/documentation/ip-geolocation-api.html
 
 # TODO:
-#   - output results to file
 #   - use RADB for lookups
 #   - option to specify radb or ipgeo
 
@@ -20,6 +19,7 @@ import requests
 import argparse
 import configparser
 import ipaddress
+import pandas
 
 # store the API key in an external file and make sure to add the file
 # to .gitignore
@@ -30,13 +30,17 @@ cfg.read('ipgeo.cfg')
 IPGEO_KEY = cfg.get('KEYS', 'api_key', raw='')
 IPGEO_URL = "https://api.ipgeolocation.io/ipgeo"
 
-def locate(ip):
+results = list()
+
+def locate_ipgeo(ip):
     '''Query IP Geo database for given IP and print Owner'''
     global results
     resp = requests.get(f'{IPGEO_URL}?apiKey={IPGEO_KEY}&ip={ip}')
     location_info = resp.json()
+    results.append([ip, location_info["isp"], location_info["city"],
+                    location_info["country_name"]])
     print(f'{ip} is owned by {location_info["isp"]}, located in '
-          f'{location_info["city"]}, {location_info["state_prov"]}.')
+          f'{location_info["city"]}, {location_info["country_name"]}.')
 
 
 def main():
@@ -50,20 +54,26 @@ def main():
     args = parser.parse_args()
 
     if args.ip:
-        locate(args.ip)
+        locate_ipgeo(args.ip)
     if args.cidr:
-        for addr in ipaddress.ip_network(args.cidr).hosts():
-            locate(addr)
+        # get first address in range perform lookup. 
+        # TODO: check returned CIDR in radb for match
+        addresses = list(ipaddress.ip_network(args.cidr).hosts())
+        locate_ipgeo(addresses[0])
     if args.file:
         with open(args.file, "r") as f:
             targets = [line.strip() for line in f.readlines()]
             for target in targets:
                 # check if it's an IP or a CIDR
                 if "/" in target:
-                    for addr in ipaddress.ip_network(target).hosts():
-                        locate(addr)
+                    addresses = list(ipaddress.ip_network(target).hosts())
+                    locate_ipgeo(addresses[0])
                 else:
-                   locate(target)
+                   locate_ipgeo(target)
+
+    if args.output:
+        df = pandas.DataFrame(results, columns =['ip', 'Owner', 'City', 'Country'])
+        df.to_csv(args.output)
 
 
 if __name__ == '__main__':
