@@ -21,3 +21,18 @@ For the Expert Task here are two networks in CIDR notation:
 20.128.0.0/16
 208.76.44.0/22
 ```
+
+```
+% python scoper.py -h                                    
+usage: scoper.py [-h] [-i IP] [-c CIDR] [-f FILE] [-o OUTPUT]
+
+Search for a provided list of queries.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i IP, --ip IP        Look up a single IP
+  -c CIDR, --cidr CIDR  Look up a CIDR range
+  -f FILE, --file FILE  Load IPs and/or CIDR ranges from file
+  -o OUTPUT, --output OUTPUT
+                        Log CSV results to this file
+```
