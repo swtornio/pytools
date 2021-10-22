@@ -12,8 +12,8 @@
 # https://ipgeolocation.io/documentation/ip-geolocation-api.html
 
 # TODO:
-#   - use RADB for lookups
-#   - option to specify radb or ipgeo
+#   - use Rdap for lookups
+#   - option to specify rdap or ipgeo
 
 import requests
 import argparse
@@ -57,7 +57,7 @@ def main():
         locate_ipgeo(args.ip)
     if args.cidr:
         # get first address in range perform lookup. 
-        # TODO: check returned CIDR in radb for match
+        # TODO: check returned CIDR in rdap for match
         addresses = list(ipaddress.ip_network(args.cidr).hosts())
         locate_ipgeo(addresses[0])
     if args.file:
