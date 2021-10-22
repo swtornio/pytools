@@ -1,25 +1,12 @@
-# Project 1 - The Scope!
-
-# Scenario: Congrats, your Penetration testing company Red Planet has
-# landed an external assessment for Microsoft! Your point of contact has
-# give you a few IP addresses for you to test. Like with any test you
-# should always verify the scope given to you to make sure there wasn't
-# a mistake.
-
-# Expert Task:Have the script read from a file containing both single
-# IP addresses and CIDR notation, having it process it both types.
 
 # https://ipgeolocation.io/documentation/ip-geolocation-api.html
-
-# TODO:
-#   - use Rdap for lookups
-#   - option to specify rdap or ipgeo
 
 import requests
 import argparse
 import configparser
 import ipaddress
 import pandas
+from ipwhois import IPWhois
 
 # store the API key in an external file and make sure to add the file
 # to .gitignore
@@ -30,20 +17,30 @@ cfg.read('ipgeo.cfg')
 IPGEO_KEY = cfg.get('KEYS', 'api_key', raw='')
 IPGEO_URL = "https://api.ipgeolocation.io/ipgeo"
 
+provided_target = ""
 results = list()
 
 def locate_ipgeo(ip):
     '''Query IP Geo database for given IP and print Owner'''
-    global results
+    global results, provided_target
     resp = requests.get(f'{IPGEO_URL}?apiKey={IPGEO_KEY}&ip={ip}')
     location_info = resp.json()
+    cidr_network = lookup_rdap(ip)
     results.append([ip, location_info["isp"], location_info["city"],
-                    location_info["country_name"]])
-    print(f'{ip} is owned by {location_info["isp"]}, located in '
-          f'{location_info["city"]}, {location_info["country_name"]}.')
+                    location_info["country_name"], provided_target,
+                    cidr_network])
+    print(f'{ip} from {provided_target} is owned by {location_info["isp"]}, '
+            f'located in {location_info["city"]}, {location_info["country_name"]}.')
+
+def lookup_rdap(ip):
+    addr = IPWhois(ip)
+    addr_data = addr.lookup_rdap(depth=1)
+    return addr_data['network']['cidr']
 
 
 def main():
+
+    global provided_target 
 
     parser = argparse.ArgumentParser(
         description='Search for a provided list of queries.')
@@ -54,10 +51,11 @@ def main():
     args = parser.parse_args()
 
     if args.ip:
+        provided_target = args.ip
         locate_ipgeo(args.ip)
     if args.cidr:
-        # get first address in range perform lookup. 
-        # TODO: check returned CIDR in rdap for match
+        provided_target = args.cidr
+        # get first address in range, perform lookup. 
         addresses = list(ipaddress.ip_network(args.cidr).hosts())
         locate_ipgeo(addresses[0])
     if args.file:
@@ -65,15 +63,16 @@ def main():
             targets = [line.strip() for line in f.readlines()]
             for target in targets:
                 # check if it's an IP or a CIDR
+                provided_target = target
                 if "/" in target:
                     addresses = list(ipaddress.ip_network(target).hosts())
                     locate_ipgeo(addresses[0])
-                    locate_ipgeo(addresses[-1])
                 else:
                    locate_ipgeo(target)
 
     if args.output:
-        df = pandas.DataFrame(results, columns =['ip', 'Owner', 'City', 'Country'])
+        df = pandas.DataFrame(results, columns =['ip', 'Owner', 'City', 'Country',
+                                'Provided Target', 'CIDR Block'])
         df.to_csv(args.output)
 
 
