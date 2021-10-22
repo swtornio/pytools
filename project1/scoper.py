@@ -50,7 +50,7 @@ def main():
     parser.add_argument('-i', '--ip', default=False, help='Look up a single IP')
     parser.add_argument('-c', '--cidr', default=False, help='Look up a CIDR range')
     parser.add_argument('-f', '--file', default=False, help='Load IPs and/or CIDR ranges from file')
-    parser.add_argument('-o', '--output', default=False, help='Log results to file')
+    parser.add_argument('-o', '--output', default=False, help='Log CSV results to this file')
     args = parser.parse_args()
 
     if args.ip:
@@ -68,6 +68,7 @@ def main():
                 if "/" in target:
                     addresses = list(ipaddress.ip_network(target).hosts())
                     locate_ipgeo(addresses[0])
+                    locate_ipgeo(addresses[-1])
                 else:
                    locate_ipgeo(target)
 
