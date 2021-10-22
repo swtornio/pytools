@@ -11,7 +11,13 @@
 
 # https://ipgeolocation.io/documentation/ip-geolocation-api.html
 
+# TODO:
+#   - output results to file
+#   - use RADB for lookups
+#   - option to specify radb or ipgeo
+
 import requests
+import argparse
 import configparser
 import ipaddress
 
@@ -26,19 +32,39 @@ IPGEO_URL = "https://api.ipgeolocation.io/ipgeo"
 
 def locate(ip):
     '''Query IP Geo database for given IP and print Owner'''
+    global results
     resp = requests.get(f'{IPGEO_URL}?apiKey={IPGEO_KEY}&ip={ip}')
     location_info = resp.json()
     print(f'{ip} is owned by {location_info["isp"]}, located in '
           f'{location_info["city"]}, {location_info["state_prov"]}.')
 
 
+def main():
+
+    parser = argparse.ArgumentParser(
+        description='Search for a provided list of queries.')
+    parser.add_argument('-i', '--ip', default=False, help='Look up a single IP')
+    parser.add_argument('-c', '--cidr', default=False, help='Look up a CIDR range')
+    parser.add_argument('-f', '--file', default=False, help='Load IPs and/or CIDR ranges from file')
+    parser.add_argument('-o', '--output', default=False, help='Log results to file')
+    args = parser.parse_args()
+
+    if args.ip:
+        locate(args.ip)
+    if args.cidr:
+        for addr in ipaddress.ip_network(args.cidr).hosts():
+            locate(addr)
+    if args.file:
+        with open(args.file, "r") as f:
+            targets = [line.strip() for line in f.readlines()]
+            for target in targets:
+                # check if it's an IP or a CIDR
+                if "/" in target:
+                    for addr in ipaddress.ip_network(target).hosts():
+                        locate(addr)
+                else:
+                   locate(target)
+
+
 if __name__ == '__main__':
-    with open("targets.txt", "r") as f:
-        targets = [line.strip() for line in f.readlines()]
-        for target in targets:
-            # check if it's an IP or a CIDR
-            if "/" in target:
-                for addr in ipaddress.ip_network(target).hosts():
-                    locate(addr)
-            else:
-               locate(target)
+    main()
