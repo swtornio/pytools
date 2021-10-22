@@ -1,4 +1,11 @@
 
+# Get free API key. Currently (Oct 2021) 30,000 requests per month,
+# 1,000/day. The tool accepts CIDR networks, but we only do a 
+# lookup on the first and last addresses of the provided range
+# to limit unnecessary lookups. Definitely compare the provided
+# CIDR range to the detected CIDR range in the CSV output to verify
+# scope.
+
 # https://ipgeolocation.io/documentation/ip-geolocation-api.html
 
 import requests
@@ -79,6 +86,7 @@ def main():
                 if "/" in target:
                     addresses = list(ipaddress.ip_network(target).hosts())
                     locate_ipgeo(addresses[0])
+                    locate_ipgeo(addresses[-1])
                 else:
                     locate_ipgeo(target)
 
