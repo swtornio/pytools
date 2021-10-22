@@ -50,6 +50,7 @@ def main():
     parser.add_argument('-o', '--output', default=False, help='Log CSV results to this file')
     args = parser.parse_args()
 
+
     if args.ip:
         provided_target = args.ip
         locate_ipgeo(args.ip)
@@ -70,10 +71,11 @@ def main():
                 else:
                    locate_ipgeo(target)
 
+
     if args.output:
-        df = pandas.DataFrame(results, columns =['ip', 'Owner', 'City', 'Country',
-                                'Provided Target', 'CIDR Block'])
-        df.to_csv(args.output)
+        df_file = pandas.DataFrame(results, columns =['ip', 'Owner', 'City', 'Country',
+                'Provided Target', 'CIDR Block'])
+        df_file.to_csv(args.output)
 
 
 if __name__ == '__main__':
