@@ -4,8 +4,8 @@ Infosec tools developed in Red Siege python group
 ##Projects
 ```
 Week 1 - Verify IP Ownership / Geo-locate
-Week 2 - OSINT - LinkedIn/GoogleFu
-Week 3 - Inspect and Report on Web Headers
+Week 2 - Inspect and Report on Web Headers
+Week 3 - TBD
 Week 4 - TBD
 Week 5 - TBD
 Week 6 - Break and Catch Up Week
