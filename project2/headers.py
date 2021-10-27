@@ -1,17 +1,18 @@
-# Expert: Have the code perform all of the tasks above while also checking for
-# the Content-Security-Policy and X-Frame-Options header, also reporting back
-# if they are missing. It should also detect if a Server header is present, if
-# it is it should return the value of the header.
-
-# Bonus: Have the script evaluate if the URL is HTTP or HTTPS. If it is HTTP,
-# it should ignore the need for a Strict-Transport-Security header while still
-# evaluating all the others.
-
 import argparse
 import requests
 from concurrent.futures import ThreadPoolExecutor
 
-# list of dictionaries
+# ANSi codes for some pretty terminal output
+
+
+class bcolors:
+    OK = '\033[92m'  # GREEN
+    WARNING = '\033[93m'  # YELLOW
+    FAIL = '\033[91m'  # RED
+    RESET = '\033[0m'  # RESET COLOR
+
+
+# list of dictionaries containing server information
 servers = list()
 
 
@@ -27,14 +28,19 @@ def check_header(url):
     with requests.get(url, stream=True) as r:
         server_info['ip'] = r.raw._original_response.fp.raw._sock.getpeername()[
             0]
+        # Create a dictionary to store headers in
         headers = {}
         if "https" in url:
-            headers['sts'] = r.headers.get('Strict-Transport-Security')
+            headers['Strict-Transport-Security'] = r.headers.get(
+                'Strict-Transport-Security')
         else:
             server_info['tls'] = False
-        headers['csp'] = r.headers.get('Content-Security-Policy')
-        headers['xfo'] = r.headers.get('X-Frame-Options')
-        headers['banner'] = r.headers.get('Server')
+        headers['Content-Security-Policy'] = r.headers.get(
+            'Content-Security-Policy')
+        headers['X-Frame-Options'] = r.headers.get('X-Frame-Options')
+        headers['Server'] = r.headers.get('Server')
+        # Add the current server's headers to server_info, then
+        # add the server to the global list of servers
         server_info['headers'] = headers
         servers.append(server_info)
 
@@ -62,10 +68,13 @@ def main():
                 processes.append(executor.submit(check_header, url))
 
     for server in servers:
-        print(f"URL: {server['url']}\tIP:{server['ip']}")
-        print("Headers:")
+        print(f"{bcolors.OK}URL:{bcolors.RESET} {server['url']}\t"
+        	  f"{bcolors.OK}IP:{bcolors.RESET} {server['ip']}")
+        if server['tls'] == False:
+            print(f"{bcolors.WARNING}Not an SSL/TLS connection, some "
+            	  f"checks disabled.{bcolors.RESET}")
         for key, value in server['headers'].items():
-            print(key, value)
+            print(f'{bcolors.OK}{key}:{bcolors.RESET} {value}')
         print('\n')
 
 
