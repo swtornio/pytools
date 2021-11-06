@@ -2,8 +2,7 @@ import argparse
 import requests
 from concurrent.futures import ThreadPoolExecutor
 
-# ANSi codes for some pretty terminal output
-
+# ANSI codes for some pretty terminal output
 
 class bcolors:
     OK = '\033[92m'  # GREEN
