@@ -6,7 +6,7 @@ Infosec tools developed in Red Siege python group
 Week 1 - Verify IP Ownership / Geo-locate
 Week 2 - Inspect and Report on Web Headers
 Week 3 - SSH Brute Force Login
-Week 4 - TBD
+Week 4 - Password Pilfer
 Week 5 - TBD
 Week 6 - Break and Catch Up Week
 Week 7 - TBD
