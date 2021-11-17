@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 # Get free API key. Currently (Oct 2021) 30,000 requests per month,
 # 1,000/day. The tool accepts CIDR networks, but we only do a 
