@@ -1,7 +1,4 @@
-# Beginner Task: Write a script that will perform a password spray
-# against the SSH service using a single username and password list.
-# It should output each time a username/password combination is failed,
-# and stop on a successful log in.
+#!/usr/bin/env python
 
 import argparse
 import getpass
@@ -72,7 +69,7 @@ if __name__ == '__main__':
                     if stealth == True:
                         attempted += 1
                     if ssh_login(ip, port, user, password.rstrip()):
-                        print(f"{bcolors.OK}SUCCESS{bcolors.RESET}")
+                        print(f"{bcolors.OK} SUCCESS{bcolors.RESET}")
 
     # credential spray
     if args.spray:
