@@ -10,7 +10,7 @@ Scenario: You are working on an internal penetration test for Red Planet and hav
 
 In order to test this you will need a service running SSH. I suggest setting up something on your local network to test against. Be mindful when setting this up, if you put something internet facing with a weak username/password combination you run the risk at someone on the internet doing the same thing we are and getting popped.
 
-
+'''
 (env) mac@MacBook-Pro project3 % python ssh_login.py --help                                   
 usage: ssh_login.py [-h] [-t TARGET] [-p PORT] [--credfile CREDFILE] [--brute] [--userfile USERFILE] [--spray]
                     [--password PASSWORD] [--stealth] [--attempts ATTEMPTS] [--delay DELAY]
@@ -30,3 +30,4 @@ optional arguments:
   --stealth             Perform a number of logins, then delay a specified time
   --attempts ATTEMPTS   Number of attempts before delay.
   --delay DELAY         Time to delay between attempts (in seconds)
+  '''
