@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Beginner Task: Write a script that will perform a password spray
 # against the SSH service using a single username and password list. 
 # It should output each time a username/password combination is failed,
