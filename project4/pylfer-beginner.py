@@ -15,6 +15,9 @@
 # 4 - xxx check list of (case-insensitive) filenames for target
 # 5 - xxx output file (full path)
 
+# The approach used here does recursive search and covers
+# Bonus Task: Add recursive search.
+
 import argparse
 import os
 
